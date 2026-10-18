@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17191d">
+<title>IG Chain</title>
+<style>
+:root{color-scheme:dark;--bg:#111317;--chrome:#202329;--chrome2:#292c33;--panel:#191c22;--line:#30343d;--text:#f1f3f5;--muted:#a0a5af;--accent:#a8c7fa;--accentbg:#283548;--green:#c6f36a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.browser{min-height:100vh}
+.tabbar{height:58px;background:#17191d;display:flex;align-items:flex-end;padding:8px 12px 0;gap:5px;border-bottom:1px solid #101114;position:sticky;top:0;z-index:3}
+.window-dots{display:flex;gap:7px;padding:0 13px 15px 5px;flex-shrink:0}.dot{height:11px;width:11px;border-radius:50%;background:#575b64}.dot:nth-child(1){background:#ff6058}.dot:nth-child(2){background:#ffbd2e}.dot:nth-child(3){background:#28c840}
+.tabs{display:flex;align-items:flex-end;gap:3px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}.tabs::-webkit-scrollbar{display:none}
+.tab{position:relative;flex:0 0 auto;max-width:190px;min-width:100px;height:41px;border:0;border-radius:12px 12px 0 0;background:#24272d;color:#bfc3cb;padding:0 13px;display:flex;align-items:center;gap:9px;text-align:left}
+.tab.active{background:var(--chrome);color:var(--text)}.tab.active:before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent);border-radius:12px 12px 0 0}
+.tab-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}.tab-close{opacity:.65;font-size:17px;line-height:1;padding:2px}.tab-close:hover{opacity:1}.new-tab{height:34px;width:36px;flex:0 0 auto;border:0;background:transparent;color:#dce0e8;font-size:24px;border-radius:9px;margin-bottom:4px}.new-tab:hover{background:#2b2e35}
+.toolbar{height:54px;background:var(--chrome);display:flex;align-items:center;gap:13px;padding:0 20px;border-bottom:1px solid #292c33}
+.navicon{font-size:19px;color:#aeb4bf}.address{height:35px;flex:1;max-width:780px;border-radius:22px;background:#15171b;border:1px solid #30343d;display:flex;align-items:center;gap:10px;padding:0 14px;color:#8f96a2}.address span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar-right{margin-left:auto;color:#abb1bc;font-size:19px}
+main{max-width:1100px;margin:0 auto;padding:28px 22px 45px}
+.heading{display:flex;align-items:center;gap:12px;margin-bottom:20px}.folder-icon{height:43px;width:43px;display:grid;place-items:center;border-radius:13px;background:var(--accentbg);color:var(--accent);font-size:22px}.title-area{min-width:0;flex:1}.title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}h1{font-size:23px;letter-spacing:-.5px;margin:0}.count{font-size:12px;color:#c5d7f4;background:#293546;padding:4px 9px;border-radius:20px}.hint{color:var(--muted);font-size:13px;margin-top:3px}
+.actions{display:flex;gap:8px;align-items:center}.search{width:min(250px,32vw);height:39px;border:1px solid var(--line);background:#191c21;color:var(--text);border-radius:12px;padding:0 13px;outline:none}.search:focus,.field:focus{border-color:#759bd6}
+.btn{border:1px solid var(--line);background:#252932;color:var(--text);border-radius:10px;padding:9px 13px;font-weight:650}.btn.primary{background:#a8c7fa;color:#18212f;border-color:#a8c7fa}.btn:hover{filter:brightness(1.08)}
+.profile-list{display:flex;flex-direction:column;gap:9px}
+.profile{display:grid;grid-template-columns:minmax(150px,220px) minmax(120px,1fr) minmax(130px,1.1fr) auto;gap:14px;align-items:center;background:var(--panel);border:1px solid #2b2f37;border-radius:13px;padding:12px 14px;min-width:0}
+.identity{display:flex;align-items:center;gap:10px;min-width:0}.avatar{height:36px;width:36px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto;background:#2a303b;color:#c8dcff;font-weight:800}.username{font-weight:750;overflow-wrap:anywhere}.username a{color:var(--text);text-decoration:none}.username a:hover{color:var(--accent)}
+.desc{font-size:13px;color:#c4c8d0;overflow-wrap:anywhere;min-width:0}.note{width:100%;min-width:0;background:#131519;border:1px solid #2d3139;color:#dce0e7;border-radius:9px;padding:9px 10px;min-height:36px;resize:vertical;font-size:12px;outline:none}.note::placeholder{color:#777e8a}
+.row-actions{display:flex;gap:6px;align-items:center}.open{white-space:nowrap;border:0;background:var(--accentbg);color:#d5e4ff;padding:9px 11px;border-radius:9px;font-weight:750}.mini{border:1px solid #343842;background:#22252c;color:#c2c7d0;padding:8px 9px;border-radius:9px}
+.empty{border:1px dashed #414650;border-radius:15px;text-align:center;padding:48px 18px;color:var(--muted)}.empty strong{display:block;color:var(--text);font-size:16px;margin:8px 0 4px}.empty .plus{font-size:30px;color:var(--accent)}
+.footer{color:#737a86;text-align:center;font-size:11px;margin-top:22px}
+.modal-bg{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;padding:18px;z-index:9}.modal-bg.show{display:flex}.modal{width:100%;max-width:440px;background:#202329;border:1px solid #3b404a;border-radius:17px;padding:21px;box-shadow:0 20px 70px #0008}.modal h2{font-size:19px;margin:0 0 5px}.modal p{font-size:13px;color:var(--muted);margin:0 0 17px}.fieldrow{margin:13px 0}.fieldrow label{display:block;font-size:12px;color:#c5cad3;font-weight:700;margin-bottom:6px}.field{width:100%;border:1px solid #3b4049;background:#14161a;color:var(--text);border-radius:10px;padding:11px 12px;outline:none}.fieldrow textarea{min-height:80px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 15px;background:#d8e7ff;color:#142033;border-radius:10px;font-weight:700;display:none;z-index:11}.toast.show{display:block}
+@media(max-width:760px){.toolbar{padding:0 13px}.navicon{display:none}main{padding:22px 12px 35px}.heading{align-items:flex-start;flex-wrap:wrap}.actions{width:100%;padding-left:0}.search{flex:1;width:auto;min-width:80px}.profile{grid-template-columns:minmax(0,1fr) auto;gap:10px}.identity{grid-column:1}.desc{grid-column:1/-1;padding-left:46px}.note{grid-column:1/-1}.row-actions{grid-column:2;grid-row:1;flex-wrap:wrap;justify-content:flex-end}.mini{padding:8px}.tab{min-width:94px;max-width:145px;padding:0 10px}.window-dots{padding-right:8px}}
+@media(max-width:400px){.window-dots{gap:4px;padding-left:0}.dot{width:9px;height:9px}.tab{min-width:84px}.heading h1{font-size:21px}.row-actions{gap:4px}.open{padding:8px}.mini{font-size:12px;padding:7px}}
+</style>
+</head>
+<body>
+<div class="browser">
+ <div class="tabbar">
+  <div class="window-dots"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+  <div class="tabs" id="tabs"></div>
+  <button class="new-tab" id="newTab" aria-label="Add category tab" title="New category">+</button>
+ </div>
+ <div class="toolbar"><span class="navicon">‹</span><span class="navicon">›</span><span class="navicon">⟳</span><div class="address"><span>◎</span><span>Instagram quick access · IG Chain</span></div><span class="toolbar-right">⋮</span></div>
+ <main>
+  <div class="heading">
+   <div class="folder-icon">▤</div>
+   <div class="title-area"><div class="title-row"><h1 id="categoryTitle">Chain</h1><span class="count" id="profileCount">0 profiles</span></div><div class="hint">Your saved Instagram profiles, organized by tab</div></div>
+   <div class="actions"><input class="search" id="search" type="search" placeholder="Search profiles…"><button class="btn primary" id="addProfile">＋ Add profile</button><button class="btn" id="renameTab" title="Rename tab">✎</button></div>
+  </div>
+  <div class="profile-list" id="profiles"></div>
+  <div class="footer">Saved in this browser · Export a backup to keep your list safe</div>
+ </main>
+</div>
+<div class="modal-bg" id="modalBg"><section class="modal" role="dialog" aria-modal="true"><h2 id="modalTitle">Add profile</h2><p id="modalHelp">Save a shortcut in this tab.</p><form id="form">
+ <div class="fieldrow" id="tabNameRow" hidden><label for="tabName">Tab name</label><input class="field" id="tabName" maxlength="50" placeholder="e.g. Chain, Friends, Memes"></div>
+ <div id="profileFields"><div class="fieldrow"><label for="username">Instagram ID / profile link *</label><input class="field" id="username" maxlength="180" placeholder="@username or instagram.com/username" autocomplete="off"></div><div class="fieldrow"><label for="description">Description</label><input class="field" id="description" maxlength="180" placeholder="Short description"></div><div class="fieldrow"><label for="notes">Your notes</label><textarea class="field" id="notes" maxlength="2000" placeholder="Write anything you want to remember…"></textarea></div></div>
+ <div class="modal-actions"><button type="button" class="btn" id="cancel">Cancel</button><button type="submit" class="btn primary" id="save">Save</button></div>
+ </form></section></div><div class="toast" id="toast"></div>
+<script>
+(()=> {
+const KEY='ig-chain-chrome-tabs-v2', $=id=>document.getElementById(id);
+const starter=()=>({active:'chain',categories:[{id:'chain',name:'Chain',profiles:[]}]});
+let data=load(),mode='add',editId=null;
+function load(){try{let d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.categories)&&d.categories.length){if(!d.categories.some(c=>c.id===d.active))d.active=d.categories[0].id;return d}}catch(e){}return starter()}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(data))}
+function uid(){return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function current(){return data.categories.find(c=>c.id===data.active)||data.categories[0]}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function handle(s){return String(s||'').trim().replace(/^@+/,'').replace(/^https?:\/\/(www\.)?instagram\.com\//i,'').replace(/[/?#].*$/,'').trim()}
+function url(p){return 'https://www.instagram.com/'+encodeURIComponent(p.username)+'/'}
+function toast(s){let t=$('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function render(){
+ $('tabs').innerHTML=data.categories.map(c=>`<button class="tab ${c.id===data.active?'active':''}" data-tab="${esc(c.id)}"><span>▣</span><span class="tab-label">${esc(c.name)}</span>${data.categories.length>1?`<span class="tab-close" data-close="${esc(c.id)}" title="Close tab">×</span>`:''}</button>`).join('');
+ const c=current(),q=$('search').value.trim().toLowerCase();$('categoryTitle').textContent=c.name;
+ const shown=c.profiles.filter(p=>!q||[p.username,p.description,p.notes].some(v=>(v||'').toLowerCase().includes(q)));
+ $('profileCount').textContent=`${shown.length} ${shown.length===1?'profile':'profiles'}`;
+ $('profiles').innerHTML=shown.length?shown.map(p=>`<article class="profile">
+ <div class="identity"><div class="avatar">${esc((p.username[0]||'@').toUpperCase())}</div><div class="username"><a href="${esc(url(p))}" target="_blank" rel="noopener noreferrer">@${esc(p.username)}</a></div></div>
+ <div class="desc">${esc(p.description||'—')}</div><textarea class="note" data-note="${esc(p.id)}" placeholder="Add a note…">${esc(p.notes||'')}</textarea>
+ <div class="row-actions"><button class="open" data-open="${esc(p.id)}">Open ↗</button><button class="mini" data-edit="${esc(p.id)}" title="Edit profile">✎</button><button class="mini" data-delete="${esc(p.id)}" title="Delete profile">×</button></div>
+ </article>`).join(''):`<div class="empty"><div class="plus">${q?'⌕':'+'}</div><strong>${q?'No matching profiles':'This tab is empty'}</strong><span>${q?'Try another search.':'Add an Instagram ID here. Your profiles will appear in a clean list.'}</span></div>`;
+}
+function modal(m,p){mode=m;editId=p?.id||null;$('form').reset();$('modalBg').classList.add('show');$('tabNameRow').hidden=!['newtab','rename'].includes(m);$('profileFields').hidden=['newtab','rename'].includes(m);
+ if(m==='newtab'){$('modalTitle').textContent='New tab';$('modalHelp').textContent='Create a Chrome-style category tab.';$('save').textContent='Create tab'}
+ else if(m==='rename'){$('modalTitle').textContent='Rename tab';$('modalHelp').textContent='Change this category tab name.';$('tabName').value=current().name;$('save').textContent='Rename'}
+ else{$('modalTitle').textContent=p?'Edit profile':'Add profile';$('modalHelp').textContent='Paste a username or Instagram profile link.';$('save').textContent='Save profile';if(p){$('username').value=p.username;$('description').value=p.description||'';$('notes').value=p.notes||''}}
+ setTimeout(()=>$(['newtab','rename'].includes(m)?'tabName':'username').focus(),40)}
+function close(){ $('modalBg').classList.remove('show') }
+$('newTab').onclick=()=>modal('newtab');$('addProfile').onclick=()=>modal('add');$('renameTab').onclick=()=>modal('rename');$('cancel').onclick=close;
+$('modalBg').addEventListener('click',e=>{if(e.target===$('modalBg'))close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+$('tabs').addEventListener('click',e=>{const x=e.target.closest('[data-close]');if(x){e.stopPropagation();const id=x.dataset.close,c=data.categories.find(z=>z.id===id);if(!c)return;if(!confirm(`Close and delete the "${c.name}" tab and all its saved profiles?`))return;data.categories=data.categories.filter(z=>z.id!==id);if(!data.categories.length)data.categories.push({id:uid(),name:'Chain',profiles:[]});if(data.active===id)data.active=data.categories[0].id;saveData();render();return}const b=e.target.closest('[data-tab]');if(b){data.active=b.dataset.tab;saveData();render()}});
+$('form').addEventListener('submit',e=>{e.preventDefault();if(mode==='newtab'||mode==='rename'){let name=$('tabName').value.trim();if(!name){$('tabName').focus();return}if(mode==='rename'){current().name=name;toast('Tab renamed')}else{const c={id:uid(),name,profiles:[]};data.categories.push(c);data.active=c.id;toast('New tab created')}}else{let username=handle($('username').value);if(!username){$('username').focus();return}if(!/^[a-zA-Z0-9._]+$/.test(username)){alert('Enter a valid Instagram username or profile link.');return}let p={username,description:$('description').value.trim(),notes:$('notes').value.trim()};if(editId){let old=current().profiles.find(x=>x.id===editId);if(old)Object.assign(old,p);toast('Profile updated')}else{current().profiles.unshift({id:uid(),...p});toast('Profile added')}}saveData();close();render()});
+$('profiles').addEventListener('click',e=>{let b=e.target.closest('[data-open]');if(b){let p=current().profiles.find(x=>x.id===b.dataset.open);if(p)window.open(url(p),'_blank','noopener');return}b=e.target.closest('[data-edit]');if(b){let p=current().profiles.find(x=>x.id===b.dataset.edit);if(p)modal('edit',p);return}b=e.target.closest('[data-delete]');if(b){let p=current().profiles.find(x=>x.id===b.dataset.delete);if(p&&confirm(`Delete @${p.username}?`)){current().profiles=current().profiles.filter(x=>x.id!==p.id);saveData();render();toast('Profile deleted')}}});
+$('profiles').addEventListener('input',e=>{let n=e.target.closest('[data-note]');if(n){let p=current().profiles.find(x=>x.id===n.dataset.note);if(p){p.notes=n.value;saveData()}}});$('search').addEventListener('input',render);
+render();
+})();
+</script>
+</body></html>
